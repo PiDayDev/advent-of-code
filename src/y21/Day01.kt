@@ -1,3 +1,5 @@
+package y21
+
 fun main() {
     fun List<Int>.countIncreases() = windowed(2).count { it[1] > it[0] }
 

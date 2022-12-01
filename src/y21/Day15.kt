@@ -1,3 +1,5 @@
+package y21
+
 import kotlin.math.min
 
 private const val day = "15"
@@ -69,7 +71,7 @@ fun main() {
         // no tests
     }
 
-    val input = readInput("Day${day}")
+    val input = readInput("Day$day")
     println(part1(input))
     println(part2(input))
 }

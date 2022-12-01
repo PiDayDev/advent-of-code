@@ -1,3 +1,5 @@
+package y21
+
 import java.util.*
 
 private const val day = "10"
@@ -56,7 +58,7 @@ fun main() {
         .map { it.completionScore() }
         .let { it.sorted()[it.size / 2] }
 
-    val input = readInput("Day${day}")
+    val input = readInput("Day$day")
     println(part1(input))
     println(part2(input))
 }

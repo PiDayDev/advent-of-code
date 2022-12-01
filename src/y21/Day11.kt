@@ -1,3 +1,5 @@
+package y21
+
 private const val day = "11"
 
 private const val JUST_FLASHED = 10
@@ -46,7 +48,7 @@ fun main() {
             .takeWhile { it.any { row -> row.sum() > 0 } }
             .count()
 
-    val input = readInput("Day${day}")
+    val input = readInput("Day$day")
     println(part1(input))
     println(part2(input))
 }

@@ -1,3 +1,5 @@
+package y21
+
 private class Alu {
 
     fun manualParsingAndSimplificationOfInput(inputDigits: List<Int>): Int {

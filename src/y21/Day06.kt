@@ -1,3 +1,5 @@
+package y21
+
 private const val day = "06"
 
 fun main() {
@@ -16,7 +18,7 @@ fun main() {
         return endFish.values.fold(0L) { a, v -> a + v }
     }
 
-    val input = readInput("Day${day}")
+    val input = readInput("Day$day")
     println(fish(input, 80))
     println(fish(input, 256))
 }

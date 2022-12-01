@@ -1,3 +1,5 @@
+package y21
+
 private const val day = "23"
 
 /*
@@ -298,6 +300,6 @@ fun main() {
         return Solver2().aStar(diagram)
     }
 
-    val input = readInput("Day${day}")
+    val input = readInput("Day$day")
     println(part2(input))
 }

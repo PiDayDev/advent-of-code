@@ -1,3 +1,5 @@
+package y21
+
 private const val day = "25"
 
 private fun List<String>.east() = map {
@@ -28,6 +30,6 @@ fun main() {
             if (next == it) null else next
         }.count()
 
-    val input = readInput("Day${day}")
+    val input = readInput("Day$day")
     println(part1(input))
 }

@@ -1,7 +1,9 @@
+package y21
+
 private const val day = "20"
 
 fun main() {
-    val input = readInput("Day${day}")
+    val input = readInput("Day$day")
 
     fun getChars(row: String, pos: Int, external: Char): String {
         val x = if (pos - 1 in row.indices) row[pos - 1] else external

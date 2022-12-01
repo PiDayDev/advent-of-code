@@ -1,3 +1,5 @@
+package y21
+
 private const val day = "08"
 
 fun main() {
@@ -49,7 +51,7 @@ fun main() {
 
     fun part2(input: List<String>) = input.sumOf { deduce(it) }
 
-    val input = readInput("Day${day}")
+    val input = readInput("Day$day")
     println(part1(input))
     println(part2(input))
 }

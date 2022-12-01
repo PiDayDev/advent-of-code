@@ -1,3 +1,5 @@
+package y21
+
 import java.util.*
 import kotlin.math.min
 import kotlin.math.sign
@@ -259,6 +261,6 @@ fun main() {
         return Solver1().aStar(diagram)
     }
 
-    val input = readInput("Day${day}")
+    val input = readInput("Day$day")
     println(part1(input))
 }

@@ -1,3 +1,5 @@
+package y21
+
 private const val day = "13"
 
 fun main() {
@@ -34,7 +36,7 @@ fun main() {
         }
     }
 
-    val input = readInput("Day${day}")
+    val input = readInput("Day$day")
     println(input.part1())
     println(input.part2())
 }

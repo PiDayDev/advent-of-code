@@ -1,3 +1,5 @@
+package y21
+
 import kotlin.math.absoluteValue
 
 private const val day = "07"
@@ -24,7 +26,7 @@ fun main() {
         }
     }
 
-    val input = readInput("Day${day}")
+    val input = readInput("Day$day")
     println(part1(input))
     println(part2(input))
 }

@@ -1,3 +1,5 @@
+package y21
+
 private const val day = "16"
 private const val marker = "!"
 
@@ -119,7 +121,7 @@ fun main() {
         // no tests
     }
 
-    val input = readInput("Day${day}")
+    val input = readInput("Day$day")
     println(part1(input))
     println(part2(input))
 }

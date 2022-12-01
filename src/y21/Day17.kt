@@ -1,3 +1,5 @@
+package y21
+
 import kotlin.math.sign
 
 private const val day = "17"
@@ -54,7 +56,7 @@ fun main() {
         }
     }
 
-    val input = readInput("Day${day}")
+    val input = readInput("Day$day")
     println(part1(input))
     println(part2(input))
 }
