@@ -1,3 +1,5 @@
+package y21
+
 import kotlin.math.max
 import kotlin.math.min
 
@@ -136,7 +138,7 @@ fun main() {
         return max(end.win1, end.win2)
     }
 
-    val input = readInput("Day${day}")
+    val input = readInput("Day$day")
     println(part1(input))
     println(part2(input))
 }

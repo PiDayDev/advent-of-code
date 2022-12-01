@@ -1,3 +1,5 @@
+package y21
+
 private const val day = "22"
 
 private data class Instr(val on: Boolean, val xs: IntRange, val ys: IntRange, val zs: IntRange)
@@ -132,7 +134,7 @@ fun main() {
         return total
     }
 
-    val input = readInput("Day${day}")
+    val input = readInput("Day$day")
     println(part1(input))
     println(part2(input))
 }

@@ -1,3 +1,5 @@
+package y21
+
 import kotlin.math.absoluteValue
 
 private const val day = "19"
@@ -128,7 +130,7 @@ fun main() {
         // no tests
     }
 
-    val input = readInput("Day${day}")
+    val input = readInput("Day$day")
     val scanners = normalizeScanners(input)
     println(part1(scanners))
     println(part2(scanners))

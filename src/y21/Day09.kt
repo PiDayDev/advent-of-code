@@ -1,3 +1,5 @@
+package y21
+
 import java.io.FileNotFoundException
 
 private const val day = "09"
@@ -64,7 +66,7 @@ fun main() {
         // no tests
     }
 
-    val input = readInput("Day${day}")
+    val input = readInput("Day$day")
     println(part1(input))
     println(part2(input))
 }

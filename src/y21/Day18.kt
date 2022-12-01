@@ -1,3 +1,5 @@
+package y21
+
 private const val day = "18"
 
 private fun String.addToLastNumber(n: Int): String =
@@ -96,7 +98,7 @@ fun main() {
         }
     }
 
-    val input = readInput("Day${day}")
+    val input = readInput("Day$day")
     println(part1(input))
     println(part2(input))
 }

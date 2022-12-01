@@ -1,3 +1,5 @@
+package y21
+
 import kotlin.math.absoluteValue
 import kotlin.math.max
 import kotlin.math.sign
@@ -34,7 +36,7 @@ fun main() {
 
     fun part2(input: List<String>) = countOverlaps(parse(input))
 
-    val input = readInput("Day${day}")
+    val input = readInput("Day$day")
     println(part1(input))
     println(part2(input))
 }

@@ -1,3 +1,5 @@
+package y21
+
 private const val day = "02"
 
 fun main() {
@@ -50,7 +52,7 @@ fun main() {
         return finalLocation.depth * finalLocation.pos
     }
 
-    val input = readInput("Day${day}")
+    val input = readInput("Day$day")
     println(part1(input))
     println(part2(input))
 }

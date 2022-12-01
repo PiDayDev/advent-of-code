@@ -1,3 +1,5 @@
+package y21
+
 private const val day = "14"
 
 private data class Polymer(val template: String, val insertions: Map<String, String>) {
@@ -52,7 +54,7 @@ fun main() {
     fun part1(input: List<String>) = iterate(input, 10)
     fun part2(input: List<String>) = iterate(input, 40)
 
-    val input = readInput("Day${day}")
+    val input = readInput("Day$day")
     println(part1(input))
     println(part2(input))
 }

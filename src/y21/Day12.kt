@@ -1,3 +1,5 @@
+package y21
+
 private const val day = "12"
 
 private typealias Arcs = List<Pair<String, String>>
@@ -58,7 +60,7 @@ fun main() {
         // no tests
     }
 
-    val input = readInput("Day${day}")
+    val input = readInput("Day$day")
     println(part1(input))
     println(part2(input))
 }

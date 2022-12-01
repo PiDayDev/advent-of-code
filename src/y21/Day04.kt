@@ -1,3 +1,5 @@
+package y21
+
 private const val day = "04"
 
 private class Board(val rows: List<List<Int>>) {
@@ -60,7 +62,7 @@ fun main() {
         return -2
     }
 
-    val input = readInput("Day${day}")
+    val input = readInput("Day$day")
     println(part1(input))
     println(part2(input))
 }

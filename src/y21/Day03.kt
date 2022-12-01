@@ -1,3 +1,5 @@
+package y21
+
 private const val day = "03"
 
 fun main() {
@@ -27,7 +29,7 @@ fun main() {
 
     fun part2(input: List<String>) = input.oxygenRate() * input.co2Rate()
 
-    val input = readInput("Day${day}")
+    val input = readInput("Day$day")
     println(part1(input))
     println(part2(input))
 }
