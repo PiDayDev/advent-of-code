@@ -1,4 +1,5 @@
 import java.io.File
+import java.math.BigInteger
 import java.util.*
 
 /**
@@ -40,3 +41,9 @@ enum class Direction(val dx: Int, val dy: Int) {
     LEFT(-1, 0),
     RIGHT(1, 0);
 }
+
+val Int.b: BigInteger
+    get() = toBigInteger()
+
+val Long.b: BigInteger
+    get() = toBigInteger()
