@@ -4,20 +4,13 @@ import kotlin.math.pow
 
 private const val DAY = 14
 
-private typealias Point = Pair<Int, Int>
-
-private val Point.x: Int
-    get() = first
-private val Point.y: Int
-    get() = second
-
-private data class Poly14(val points: List<Point>) {
+private data class Poly14(val points: List<Point2D>) {
     val xr: IntRange
         get() = points.map { it.x }.sorted().let { it.first()..it.last() }
     val yr: IntRange
         get() = points.map { it.y }.sorted().let { it.first()..it.last() }
 
-    private val allPoints: Set<Point> = points.windowed(2).flatMap { (a, b) ->
+    private val allPoints: Set<Point2D> = points.windowed(2).flatMap { (a, b) ->
         val x1 = min(a.x, b.x)
         val x2 = max(a.x, b.x)
         val y1 = min(a.y, b.y)
@@ -29,13 +22,12 @@ private data class Poly14(val points: List<Point>) {
         }
     }.toSet()
 
-    operator fun contains(p: Point) = p in allPoints
+    operator fun contains(p: Point2D) = p in allPoints
 
     override fun toString(): String = toString(xr, yr, listOf(this))
-
 }
 
-private fun toString(xRange: IntRange, yRange: IntRange, rocks: List<Poly14>, sand: Collection<Point> = emptyList()): String {
+private fun toString(xRange: IntRange, yRange: IntRange, rocks: List<Poly14>, sand: Collection<Point2D> = emptyList()): String {
     val b = StringBuilder()
     (1..3).forEach { line ->
         b.append("    ")
@@ -66,9 +58,9 @@ private fun String.toPoly() = split(" -> ")
 
 private fun String.toPoint() = split(",").let { (a, b) -> a.toInt() to b.toInt() }
 
-private data class Cave14(val rocks: List<Poly14>, val sand: MutableSet<Point> = mutableSetOf()) {
+private data class Cave14(val rocks: List<Poly14>, val sand: MutableSet<Point2D> = mutableSetOf()) {
 
-    tailrec fun addSand(from: Point) {
+    tailrec fun addSand(from: Point2D) {
         val (x, y) = from
         val destination = listOf(x to y + 1, x - 1 to y + 1, x + 1 to y + 1)
             .firstOrNull { isFree(it) }
@@ -79,7 +71,7 @@ private data class Cave14(val rocks: List<Poly14>, val sand: MutableSet<Point> =
         }
     }
 
-    fun isFree(xy: Point) = xy !in sand && rocks.none { rock -> xy in rock }
+    fun isFree(xy: Point2D) = xy !in sand && rocks.none { rock -> xy in rock }
 
     val yRockBottom by lazy { rocks.map { it.yr.last }.maxOf { it } }
 
