@@ -27,6 +27,8 @@ private class Cave17(val jets: String) {
     private var falling: Rock = emptyList()
     private var jetIndex: Int = 0
 
+    fun jetty() = jetIndex
+
     fun maxY() = stable.maxOfOrNull { it.y } ?: -1
 
     fun appear(rock: Rock) {
@@ -80,28 +82,74 @@ private class Cave17(val jets: String) {
         s.append("+-------+")
         return s.toString()
     }
+
+    fun simulate(rockCount: Int) {
+        repeat(rockCount) { rockIndex ->
+            val rock = rocks[rockIndex % rocks.size]
+            appear(rock)
+            var stopped = false
+            while (!stopped) {
+                jetsPushRock()
+                stopped = rockFalls()
+            }
+            if (rockIndex % 100 == 0)
+                println("Rock $rockIndex - Jet index $jetIndex - Y ${maxY()}  ")
+        }
+    }
+
+    fun rows() = stable
+        .groupBy(keySelector = { it.y }, valueTransform = { it.x })
+        .toSortedMap()
+        .toList()
+        .map { it.second.sorted() }
 }
 
 fun main() {
+
     fun part1(jets: String): Int {
         val cave = Cave17(jets)
-        repeat(2022) { rockIndex ->
-            val rock = rocks[rockIndex % rocks.size]
-            cave.appear(rock)
-            var stopped = false
-            while (!stopped) {
-                cave.jetsPushRock()
-                stopped = cave.rockFalls()
-            }
-        }
+        cave.simulate(2022)
         return cave.maxY() + 1
     }
 
-    fun part2(input: String): Int {
-        return input.length
+    fun part2_manually(jets: String): Long {
+        val cave = Cave17(jets)
+        val totalRocks = 1_000_000_000_000L
+
+        // FIXME deduced from logs, could be done programmatically
+        val rocksInPeriod = 1700
+
+        val mod = (totalRocks % rocksInPeriod).toInt()
+        val initialRockCount = mod + rocksInPeriod * 3
+        cave.simulate(initialRockCount)
+
+        println("-----------------------\n- SIMULATION COMPLETE -")
+
+        val rows = cave.rows()
+
+        // FIXME deduced from logs, could be done programmatically
+        val rowsInPeriod = 2623
+
+        val remainingRockCount = totalRocks - initialRockCount
+        val remainingPeriods = remainingRockCount / rocksInPeriod
+        val additionalRows = remainingPeriods * rowsInPeriod
+        val totalRows = additionalRows + rows.size
+
+        println(
+            """
+            Total rows = ${rows.size}.
+            The last $rowsInPeriod rows will repeat periodically.. it takes $rocksInPeriod rocks to fill $rowsInPeriod rows.
+            - How many rocks should still fall? $remainingRockCount
+            - How many periods should still be repeated? $remainingPeriods
+            - How many rows will be added? $additionalRows
+            - How many rows will there be in total? $totalRows
+            """.trimIndent()
+        )
+
+        return totalRows
     }
 
     val input = readInput("Day${DAY}").first()
     println(part1(input))
-    println(part2(input))
+    println(part2_manually(input))
 }
