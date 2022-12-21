@@ -1,3 +1,7 @@
+import common.Point2D
+import common.x
+import common.y
+
 private const val DAY = 17
 
 private typealias Rock = List<Point2D>

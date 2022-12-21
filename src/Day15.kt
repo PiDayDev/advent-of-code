@@ -1,3 +1,5 @@
+import common.intersection
+import common.union
 import kotlin.math.absoluteValue
 
 private const val DAY = 15

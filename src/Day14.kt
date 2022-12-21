@@ -1,3 +1,6 @@
+import common.Point2D
+import common.x
+import common.y
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
