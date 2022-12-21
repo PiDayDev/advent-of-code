@@ -1,3 +1,5 @@
+package common
+
 typealias Point2D = Pair<Int, Int>
 
 val Point2D.x: Int

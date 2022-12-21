@@ -1,3 +1,5 @@
+package common
+
 operator fun <T : Comparable<T>> ClosedRange<T>.contains(other: ClosedRange<T>) =
     other.start in this && other.endInclusive in this
 

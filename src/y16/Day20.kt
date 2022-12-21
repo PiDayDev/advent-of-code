@@ -1,6 +1,6 @@
 package y16
 
-import union
+import common.union
 
 private const val day = "20"
 
