@@ -26,8 +26,6 @@ enum class CardinalDirection(vararg val movements: Direction) {
     }
 }
 
-private operator fun Point2D.plus(d: Direction): Point2D = x + d.dx to y + d.dy
-
 private operator fun Point2D.plus(c: CardinalDirection): Point2D = c.movements.fold(this) { a, d -> a + d }
 
 private data class Grove(
