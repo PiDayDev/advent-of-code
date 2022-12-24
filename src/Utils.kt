@@ -1,3 +1,6 @@
+import common.Point2D
+import common.x
+import common.y
 import java.io.File
 import java.math.BigInteger
 import java.util.*
@@ -41,6 +44,9 @@ enum class Direction(val dx: Int, val dy: Int) {
     LEFT(-1, 0),
     RIGHT(1, 0);
 }
+
+operator fun Point2D.plus(d: Direction): Point2D = x + d.dx to y + d.dy
+
 
 val Int.b: BigInteger
     get() = toBigInteger()
