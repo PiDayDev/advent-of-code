@@ -1,17 +1,20 @@
+import common.Point2D
+import common.x
+import common.y
+
 private const val DAY = 12
 
-private typealias Location = Pair<Int, Int>
+private operator fun List<String>.get(xy: Point2D): Char =
+    this[xy.y][xy.x]
 
-private operator fun List<String>.get(xy: Location): Char = this[xy.second][xy.first]
-
-private fun List<String>.altitude(xy: Location) =
+private fun List<String>.altitude(xy: Point2D) =
     when (val cell = this[xy]) {
         'S' -> 'a'
         'E' -> 'z'
         else -> cell
     }.code
 
-private fun List<String>.destinations(xy: Location): List<Location> {
+private fun List<String>.destinations(xy: Point2D): List<Point2D> {
     val z = altitude(xy)
     val (x, y) = xy
     return listOf(x + 1 to y, x - 1 to y, x to y + 1, x to y - 1)

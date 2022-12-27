@@ -31,8 +31,6 @@ private class Cave17(val jets: String) {
     private var falling: Rock = emptyList()
     private var jetIndex: Int = 0
 
-    fun jetty() = jetIndex
-
     fun maxY() = stable.maxOfOrNull { it.y } ?: -1
 
     fun appear(rock: Rock) {
@@ -87,7 +85,8 @@ private class Cave17(val jets: String) {
         return s.toString()
     }
 
-    fun simulate(rockCount: Int) {
+    fun simulate(rockCount: Int): MutableMap<Int, MutableMap<Int, Int>> {
+        val jetPositionToRockNumberAndY = mutableMapOf<Int, MutableMap<Int, Int>>()
         repeat(rockCount) { rockIndex ->
             val rock = rocks[rockIndex % rocks.size]
             appear(rock)
@@ -96,64 +95,45 @@ private class Cave17(val jets: String) {
                 jetsPushRock()
                 stopped = rockFalls()
             }
-            if (rockIndex % 100 == 0)
-                println("Rock $rockIndex - Jet index $jetIndex - Y ${maxY()}  ")
+            val map = jetPositionToRockNumberAndY.getOrPut(jetIndex) { mutableMapOf() }
+            map[rockIndex] = maxY()
         }
+        return jetPositionToRockNumberAndY
     }
 
-    fun rows() = stable
-        .groupBy(keySelector = { it.y }, valueTransform = { it.x })
-        .toSortedMap()
-        .toList()
-        .map { it.second.sorted() }
 }
 
 fun main() {
+    val jets = readInput("Day${DAY}").first()
 
-    fun part1(jets: String): Int {
-        val cave = Cave17(jets)
-        cave.simulate(2022)
-        return cave.maxY() + 1
-    }
+    // part 1
+    val cave = Cave17(jets)
+    val jetPositionToRockNumberAndY = cave.simulate(2022)
+    val answer1 = cave.maxY() + 1
 
-    fun part2_manually(jets: String): Long {
-        val cave = Cave17(jets)
-        val totalRocks = 1_000_000_000_000L
+    println("PART 1 = $answer1")
 
-        // FIXME deduced from logs, could be done programmatically
-        val rocksInPeriod = 1700
+    // part 2
+    val sampleWithPeriod = jetPositionToRockNumberAndY
+        .filterValues { it.size > 1 }
+        .maxByOrNull { it.value.keys.sum() }!!
 
-        val mod = (totalRocks % rocksInPeriod).toInt()
-        val initialRockCount = mod + rocksInPeriod * 3
-        cave.simulate(initialRockCount)
+    val rockToY = sampleWithPeriod.value
+    val rockIndices = rockToY.keys.toList().sortedDescending()
+    val rockPeriod = rockIndices.let { (a, b) -> a - b }
+    val rowsPeriod = rockIndices.let { (a, b) -> rockToY[a]!! - rockToY[b]!! }
 
-        println("-----------------------\n- SIMULATION COMPLETE -")
+    val totalRocks = 1_000_000_000_000L
 
-        val rows = cave.rows()
+    var mod = (totalRocks % rockPeriod).toInt()
+    while (mod + rockPeriod < 2022) mod += rockPeriod
 
-        // FIXME deduced from logs, could be done programmatically
-        val rowsInPeriod = 2623
+    val initialRows = jetPositionToRockNumberAndY.values.firstNotNullOf { it[mod] }
 
-        val remainingRockCount = totalRocks - initialRockCount
-        val remainingPeriods = remainingRockCount / rocksInPeriod
-        val additionalRows = remainingPeriods * rowsInPeriod
-        val totalRows = additionalRows + rows.size
+    val remainingRockCount = totalRocks - mod
+    val remainingPeriods = remainingRockCount / rockPeriod
+    val additionalRows = remainingPeriods * rowsPeriod
+    val totalRows = additionalRows + initialRows
 
-        println(
-            """
-            Total rows = ${rows.size}.
-            The last $rowsInPeriod rows will repeat periodically.. it takes $rocksInPeriod rocks to fill $rowsInPeriod rows.
-            - How many rocks should still fall? $remainingRockCount
-            - How many periods should still be repeated? $remainingPeriods
-            - How many rows will be added? $additionalRows
-            - How many rows will there be in total? $totalRows
-            """.trimIndent()
-        )
-
-        return totalRows
-    }
-
-    val input = readInput("Day${DAY}").first()
-    println(part1(input))
-    println(part2_manually(input))
+    println("PART 1 = $totalRows")
 }

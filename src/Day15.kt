@@ -36,11 +36,10 @@ fun main() {
         return totalRangeSize - beaconsInRange.toLong()
     }
 
-    /** Warning: low-performance method */
     fun part2(sensors: List<Sensor>): Long {
         fun tuning(x: Long, y: Long) = x * 4_000_000L + y
         val domain: LongRange = 0L..4_000_000L
-        domain.forEach { row ->
+        domain.asSequence().forEach { row ->
             val ranges = sensors
                 .flatMap { it.xRange(row) intersection domain }
                 .union()

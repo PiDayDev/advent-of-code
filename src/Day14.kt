@@ -112,17 +112,15 @@ fun main() {
         val maxDeltaX = yFloor + 2
         val floor = Poly14(listOf(500 - maxDeltaX to yFloor, 500 + maxDeltaX to yFloor))
         val finiteCave = Cave14(rocks + floor)
-        println(finiteCave)
+//        println(finiteCave)
         while (sandSource !in finiteCave.sand) {
             finiteCave.addSand(sandSource)
         }
-        println(finiteCave)
+//        println(finiteCave)
         return finiteCave.sand.size
     }
 
     val rocks = readInput("Day${DAY}").map { it.toPoly() }
     println(part1(Cave14(rocks)))
-    val p2 = part2(Cave14(rocks))
-    println(p2)
-    check(p2 > 25914)
+    println(part2(Cave14(rocks)))
 }
