@@ -89,14 +89,6 @@ fun main() {
         return leg1.time + leg2.time + leg3.time
     }
 
-    // test if implementation meets criteria from the description, like:
-    /* try {
-         val testInput = readInput("Day${DAY}_test")
-         check(part1(testInput) == 1)
-     } catch (e: java.io.FileNotFoundException) {
-         // no tests
-     }*/
-
     val valley = readInput("Day${DAY}").toValley()
     println(part1(valley))
     println(part2(valley))

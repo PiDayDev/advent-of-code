@@ -32,27 +32,24 @@ infix fun <T : Comparable<T>> ClosedRange<T>.intersection(other: ClosedRange<T>)
         else -> emptyList()
     }
 
-fun <T : Comparable<T>> List<ClosedRange<T>>.union() =
-    reduceWith(ClosedRange<T>::union)
-
-fun <T : Comparable<T>> List<ClosedRange<T>>.intersection() =
-    reduceWith(ClosedRange<T>::intersection)
-
-private fun <T : Comparable<T>> List<ClosedRange<T>>.reduceWith(
-    function: ClosedRange<T>.(ClosedRange<T>) -> List<ClosedRange<T>>
-): List<ClosedRange<T>> {
+fun <T : Comparable<T>> List<ClosedRange<T>>.union(): List<ClosedRange<T>> {
     var k = this
-    var z = k.recursionStep(function)
+    var z = k.unionStep()
     while (z.size != k.size) {
-        k = z
-        z = k.recursionStep(function)
+        k = z.toList()
+        z = k.unionStep()
     }
-    return z
+    return z.toList()
 }
 
-private fun <T : Comparable<T>> List<ClosedRange<T>>.recursionStep(
-    function: ClosedRange<T>.(ClosedRange<T>) -> List<ClosedRange<T>>
-) =
-    drop(1).fold(take(1)) { acc: List<ClosedRange<T>>, curr: ClosedRange<T> ->
-        acc.flatMap { it.function(curr) }.distinct()
+private fun <T : Comparable<T>> List<ClosedRange<T>>.unionStep() =
+    when (size) {
+        in 0..1 -> this
+        2 -> first() union last()
+        else -> subList(1, size)
+            .sortedBy { it.start }
+            .toSet()
+            .fold(take(1)) { acc: Collection<ClosedRange<T>>, curr: ClosedRange<T> ->
+                acc.flatMapTo(mutableSetOf()) { it union curr }
+            }
     }
