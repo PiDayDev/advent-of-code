@@ -1,3 +1,5 @@
+package y23
+
 private const val DAY = "99"
 
 fun main() {
@@ -17,7 +19,7 @@ fun main() {
          // no tests
      }*/
 
-    val input = readInput("Day${DAY}")
+    val input = readInput("Day$DAY")
     println(part1(input))
     println(part2(input))
 }
