@@ -1,3 +1,5 @@
+package y22
+
 import kotlin.math.max
 
 private const val DAY = 19
@@ -136,7 +138,7 @@ fun main() {
     fun optimize(blueprint: Blueprint, maxTime: Int) =
         optimize(blueprint, maxTime, availableMaterials = Materials(), availableBots = Bots(ore = 1), currentBest = 0)
 
-    val input = readInput("Day${DAY}")
+    val input = readInput("Day$DAY")
     val blueprints = input.map { it.toBlueprint() }
 
     fun part1(blueprints: List<Blueprint>) = blueprints

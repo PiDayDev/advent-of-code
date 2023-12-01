@@ -1,3 +1,5 @@
+package y22
+
 import kotlin.math.sign
 
 private const val DAY = "09"
@@ -44,7 +46,7 @@ fun main() {
         return visited.size
     }
 
-    val input = readInput("Day${DAY}").toMovements()
+    val input = readInput("Day$DAY").toMovements()
     println(part1(input))
     println(part2(input))
 }

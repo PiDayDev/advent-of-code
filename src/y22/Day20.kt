@@ -1,3 +1,5 @@
+package y22
+
 private const val DAY = 20
 
 private class CryptoToken(val value: Long) {
@@ -41,7 +43,7 @@ fun main() {
 
     fun part2(input: List<Long>) = decrypt(input, DAY_20_PART_2_DECRYPTION_KEY, 10)
 
-    val input = readInput("Day${DAY}").map { it.toLong() }
+    val input = readInput("Day$DAY").map { it.toLong() }
     println(part1(input))
     println(part2(input))
 }

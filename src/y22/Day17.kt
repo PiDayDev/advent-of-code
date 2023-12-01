@@ -1,3 +1,5 @@
+package y22
+
 import common.Point2D
 import common.x
 import common.y
@@ -104,7 +106,7 @@ private class Cave17(val jets: String) {
 }
 
 fun main() {
-    val jets = readInput("Day${DAY}").first()
+    val jets = readInput("Day$DAY").first()
 
     // part 1
     val cave = Cave17(jets)

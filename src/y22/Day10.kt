@@ -1,3 +1,5 @@
+package y22
+
 private const val DAY = 10
 
 fun main() {
@@ -32,7 +34,7 @@ fun main() {
             }
         }
 
-    val input = readInput("Day${DAY}")
+    val input = readInput("Day$DAY")
     val signal = computeSignal(input)
 
     println(part1(signal))

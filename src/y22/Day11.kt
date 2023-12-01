@@ -1,3 +1,5 @@
+package y22
+
 import java.math.BigInteger
 import java.math.BigInteger.ONE
 import java.math.BigInteger.ZERO

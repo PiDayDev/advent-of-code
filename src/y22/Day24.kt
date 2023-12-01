@@ -1,4 +1,6 @@
-import Direction.*
+package y22
+
+import y22.Direction.*
 import common.Point2D
 import common.x
 import common.y
@@ -89,7 +91,7 @@ fun main() {
         return leg1.time + leg2.time + leg3.time
     }
 
-    val valley = readInput("Day${DAY}").toValley()
+    val valley = readInput("Day$DAY").toValley()
     println(part1(valley))
     println(part2(valley))
 }

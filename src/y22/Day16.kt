@@ -1,3 +1,5 @@
+package y22
+
 private const val DAY = 16
 
 private data class Valve(val id: String, val rate: Int = 0, val neighbors: List<String>)
@@ -91,7 +93,7 @@ fun main() {
         }
     }
 
-    val input = readInput("Day${DAY}")
+    val input = readInput("Day$DAY")
     val valveGraph = input.map(String::toValve).associateBy { it.id }.toValveGraph()
 
     println(part1(valveGraph))

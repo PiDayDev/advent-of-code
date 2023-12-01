@@ -1,3 +1,5 @@
+package y22
+
 import common.contains
 import common.overlaps
 
@@ -8,7 +10,7 @@ private fun String.toRangePair() = split(",").map { it.toRange() }.let { (a, b) 
 private fun String.toRange() = split("-").let { (a, b) -> a.toInt()..b.toInt() }
 
 fun main() {
-    val input = readInput("Day${DAY}")
+    val input = readInput("Day$DAY")
 
     val listOfRangePairs = input.map { it.toRangePair() }
 

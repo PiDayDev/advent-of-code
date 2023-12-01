@@ -1,4 +1,6 @@
-import Direction.*
+package y22
+
+import y22.Direction.*
 import common.Point2D
 import common.x
 import common.y
@@ -30,7 +32,12 @@ private operator fun Point2D.plus(c: CardinalDirection): Point2D = c.movements.f
 
 private data class Grove(
     val elves: Set<Point2D>,
-    val order: List<CardinalDirection> = listOf(CardinalDirection.N, CardinalDirection.S, CardinalDirection.W, CardinalDirection.E)
+    val order: List<CardinalDirection> = listOf(
+        CardinalDirection.N,
+        CardinalDirection.S,
+        CardinalDirection.W,
+        CardinalDirection.E
+    )
 ) {
 
 
@@ -96,7 +103,7 @@ fun main() {
                 .windowed(2)
                 .indexOfFirst { (a, b) -> a.elves == b.elves }
 
-    val grove = readInput("Day${DAY}").toGrove()
+    val grove = readInput("Day$DAY").toGrove()
     println(part1(grove))
     println(part2(grove))
 }

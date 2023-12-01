@@ -1,3 +1,5 @@
+package y22
+
 import common.intersection
 import common.union
 import kotlin.math.absoluteValue
@@ -58,7 +60,7 @@ fun main() {
         return -1L
     }
 
-    val sensors = readInput("Day${DAY}").map { it.parse() }
+    val sensors = readInput("Day$DAY").map { it.parse() }
 
     println(part1(sensors, 2_000_000L))
     println(part2(sensors))

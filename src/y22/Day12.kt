@@ -1,3 +1,5 @@
+package y22
+
 import common.Point2D
 import common.x
 import common.y
@@ -62,7 +64,7 @@ fun main() {
             }.minOrNull()
         }.minOrNull()!!
 
-    val input = readInput("Day${DAY}")
+    val input = readInput("Day$DAY")
     println(part1(input))
     println(part2(input))
 

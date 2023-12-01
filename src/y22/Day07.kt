@@ -1,3 +1,5 @@
+package y22
+
 private const val DAY = "07"
 
 private sealed class Item {
@@ -85,7 +87,7 @@ fun main() {
             .filter { it >= neededDiskSpace }
             .minOf { it }
 
-    val input = readInput("Day${DAY}")
+    val input = readInput("Day$DAY")
 
     val fileSystem = input.toFileSystem()
     val directorySizes = fileSystem.allDirectories().map { it.totalSize() }

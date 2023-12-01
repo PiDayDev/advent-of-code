@@ -1,3 +1,5 @@
+package y22
+
 fun main() {
 
     val alphabet = listOf(' ') + ('a'..'z').toList() + ('A'..'Z').toList()
