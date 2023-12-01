@@ -1,3 +1,5 @@
+package y22
+
 import kotlin.math.pow
 
 private const val DAY = 25
@@ -59,6 +61,6 @@ fun main() {
         return Snafu(result).toString()
     }
 
-    val input = readInput("Day${DAY}")
+    val input = readInput("Day$DAY")
     println(part1(input))
 }

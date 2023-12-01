@@ -1,3 +1,5 @@
+package y22
+
 import common.Point2D
 import common.x
 import common.y
@@ -166,7 +168,7 @@ fun main() {
     fun part2(board: ForceFieldBoard, command: String) =
         part1(board.copy(mode = ForceFieldBoard.Mode.CUBE), command)
 
-    val input = readInput("Day${DAY}")
+    val input = readInput("Day$DAY")
     val board = input.dropLast(1).toForceFieldBoard()
     val command = input.last()
 

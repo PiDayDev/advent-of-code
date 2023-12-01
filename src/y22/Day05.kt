@@ -1,3 +1,5 @@
+package y22
+
 import java.util.*
 
 private const val DAY = "05"
@@ -14,7 +16,7 @@ fun main() {
         return cargo.tops()
     }
 
-    val input = readInput("Day${DAY}")
+    val input = readInput("Day$DAY")
 
     val startingCargo = input.takeWhile { it.isNotBlank() }
 

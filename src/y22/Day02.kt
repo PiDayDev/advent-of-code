@@ -1,3 +1,5 @@
+package y22
+
 private enum class RPS(val value: Int) {
     Rock(1), Paper(2), Scissors(3);
 

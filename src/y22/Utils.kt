@@ -1,3 +1,5 @@
+package y22
+
 import common.Point2D
 import common.x
 import common.y
@@ -8,7 +10,7 @@ import java.util.*
 /**
  * Reads lines from the given input txt file.
  */
-fun readInput(name: String) = File("src", "$name.txt").readLines()
+fun readInput(name: String) = File("src/y22", "$name.txt").readLines()
 
 /*
 ADVANCED DATA STRUCTURES

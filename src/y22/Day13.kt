@@ -1,3 +1,5 @@
+package y22
+
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonPrimitive
@@ -70,7 +72,7 @@ fun main() {
         return (idx2 + 1) * (idx6 + 1)
     }
 
-    val rows = readInput("Day${DAY}")
+    val rows = readInput("Day$DAY")
         .chunked(3)
         .map { (a, b) ->
             a.toPacket() to b.toPacket()

@@ -1,3 +1,5 @@
+package y22
+
 private const val DAY = 18
 
 private data class Cube(val x: Int, val y: Int, val z: Int) {
@@ -46,7 +48,7 @@ fun main() {
         return part1(domain - air)
     }
 
-    val input = readInput("Day${DAY}")
+    val input = readInput("Day$DAY")
     val cubes = input.map { it.toCube() }
     println(part1(cubes))
     println(part2(cubes))

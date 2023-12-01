@@ -1,3 +1,5 @@
+package y22
+
 fun main() {
 
     fun headAndTail(input: List<String>): Pair<List<String>, List<String>> {

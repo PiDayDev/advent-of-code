@@ -1,3 +1,5 @@
+package y22
+
 import common.Point2D
 import common.x
 import common.y
@@ -120,7 +122,7 @@ fun main() {
         return finiteCave.sand.size
     }
 
-    val rocks = readInput("Day${DAY}").map { it.toPoly() }
+    val rocks = readInput("Day$DAY").map { it.toPoly() }
     println(part1(Cave14(rocks)))
     println(part2(Cave14(rocks)))
 }

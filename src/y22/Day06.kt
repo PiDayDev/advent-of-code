@@ -1,3 +1,5 @@
+package y22
+
 private const val DAY = "06"
 
 fun main() {
@@ -15,7 +17,7 @@ fun main() {
 
     fun part2(input: String) = detectMarkerPacket(input, 14)
 
-    val input = readInput("Day${DAY}").first()
+    val input = readInput("Day$DAY").first()
     println(part1(input))
     println(part2(input))
 }

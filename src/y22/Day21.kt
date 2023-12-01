@@ -1,3 +1,5 @@
+package y22
+
 import common.ArithmeticCalculator
 
 private const val DAY = 21
@@ -6,7 +8,7 @@ const val delimiter = ": "
 
 fun main() {
 
-    val input = readInput("Day${DAY}")
+    val input = readInput("Day$DAY")
 
     fun toArithmeticExpression(monkeyStrings: Map<String, String>): String {
         var root = monkeyStrings["root"]!!

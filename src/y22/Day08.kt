@@ -1,3 +1,5 @@
+package y22
+
 private const val DAY = "08"
 
 fun main() {
@@ -53,7 +55,7 @@ fun main() {
         }
         .maxOf { it }
 
-    val input = readInput("Day${DAY}")
+    val input = readInput("Day$DAY")
     println(part1(input))
     println(part2(input))
 }
