@@ -57,7 +57,7 @@ fun main() {
 
 private fun String.symbolsPositions(regex: Regex): List<Int> =
     mapIndexedNotNull { index, c ->
-        if (regex.matches("" + c)) index
+        if (regex.matches("$c")) index
         else null
     }
 
