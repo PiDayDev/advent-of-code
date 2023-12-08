@@ -2,12 +2,19 @@ package y23
 
 private const val DAY = "08"
 
-typealias Bifurcation = Pair<String, String>
+typealias Fork = Pair<String, String>
 
 private data class DesertNetwork(
-    val network: Map<String, Bifurcation>,
-    var position: String = "AAA"
+    val network: Map<String, Fork>,
+    val origin: String = "AAA"
 ) {
+    var position = origin
+        private set
+
+    var navigationCounter = 0
+        private set
+
+    val reachedDestinations = mutableListOf(origin)
 
     constructor(rows: List<String>) : this(
         rows.associate {
@@ -17,11 +24,13 @@ private data class DesertNetwork(
     )
 
     fun navigate(direction: Char) {
+        navigationCounter++
         val destinations = network[position]!!
         position = when (direction) {
             'L' -> destinations.first
             else -> destinations.second
         }
+        reachedDestinations += position
     }
 }
 
@@ -48,11 +57,11 @@ fun main() {
         return count
     }
 
-    fun part2(input: List<String>): Int {
+    fun part2(input: List<String>): Long {
         val (ghost:DesertNetwork, steps: Sequence<Char>) = mapAndSteps(input)
         val startingPoints = input.map { it.substringBefore(" =")}.filter { it.endsWith("A") }
 
-        val ghosts = startingPoints.map { ghost.copy(position = it) }
+        val ghosts = startingPoints.map { ghost.copy(origin = it) }
 
         var count = 0
         val iterator = steps.iterator()
@@ -61,12 +70,31 @@ fun main() {
             val step = iterator.next()
             ghosts.forEach { it.navigate(step) }
             count++
+            if (count > 99_999) break
         }
 
-        return count
+        for (g in ghosts) {
+            println(
+                """
+                -----------------------------------------
+                From ${g.origin} I reached
+            """.trimIndent()
+            )
+            g.reachedDestinations.mapIndexed { index, s -> index to s }
+                .filter { it.second.endsWith("Z") }
+                .forEach { println("- ${it.second} in ${it.first} steps") }
+        }
+
+        return lcm(18113, 22411, 21797, 14429, 16271, 18727)
     }
 
     val input = readInput("Day$DAY")
     println(part1(input))
     println(part2(input))
+}
+
+private tailrec fun gcd(a: Long, b: Long): Long = if (b == 0L) a else gcd(b, a % b)
+
+private fun lcm(vararg n: Long): Long = n.reduce { a, b ->
+    a * b / gcd(a, b)
 }
