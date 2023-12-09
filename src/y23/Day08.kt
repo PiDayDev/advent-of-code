@@ -11,11 +11,6 @@ private data class DesertNetwork(
     var position = origin
         private set
 
-    var navigationCounter = 0
-        private set
-
-    val reachedDestinations = mutableListOf(origin)
-
     constructor(rows: List<String>) : this(
         rows.associate {
             val (src, left, right) = it.split("""[^A-Z]+""".toRegex())
@@ -24,23 +19,23 @@ private data class DesertNetwork(
     )
 
     fun navigate(direction: Char) {
-        navigationCounter++
         val destinations = network[position]!!
         position = when (direction) {
             'L' -> destinations.first
             else -> destinations.second
         }
-        reachedDestinations += position
     }
 }
 
 
 fun main() {
     fun mapAndSteps(input: List<String>): Pair<DesertNetwork, Sequence<Char>> {
-        val directions: Sequence<Char> = input.first().asSequence()
         val map = DesertNetwork(input.drop(2))
+
+        val directions = input.first().asSequence()
         val steps: Sequence<Char> = generateSequence { directions }.flatten()
-        return Pair(map, steps)
+
+        return map to steps
     }
 
     fun part1(input: List<String>): Int {
@@ -59,33 +54,26 @@ fun main() {
 
     fun part2(input: List<String>): Long {
         val (ghost:DesertNetwork, steps: Sequence<Char>) = mapAndSteps(input)
-        val startingPoints = input.map { it.substringBefore(" =")}.filter { it.endsWith("A") }
+        val startingPoints = input.map { it.substringBefore(" = ") }.filter { it.endsWith("A") }
 
         val ghosts = startingPoints.map { ghost.copy(origin = it) }
 
-        var count = 0
+        var count = 0L
         val iterator = steps.iterator()
 
-        while (ghosts.any{!it.position .endsWith("Z")}) {
-            val step = iterator.next()
-            ghosts.forEach { it.navigate(step) }
+        val loopLengths = mutableMapOf<String, Long>()
+        while (loopLengths.size < startingPoints.size) {
             count++
-            if (count > 99_999) break
+            val step = iterator.next()
+            ghosts.forEach {
+                it.navigate(step)
+                if (it.position.endsWith("Z") && it.origin !in loopLengths) {
+                    loopLengths[it.origin] = count
+                }
+            }
         }
 
-        for (g in ghosts) {
-            println(
-                """
-                -----------------------------------------
-                From ${g.origin} I reached
-            """.trimIndent()
-            )
-            g.reachedDestinations.mapIndexed { index, s -> index to s }
-                .filter { it.second.endsWith("Z") }
-                .forEach { println("- ${it.second} in ${it.first} steps") }
-        }
-
-        return lcm(18113, 22411, 21797, 14429, 16271, 18727)
+        return lcm(*loopLengths.values.toLongArray())
     }
 
     val input = readInput("Day$DAY")
