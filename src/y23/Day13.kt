@@ -64,8 +64,8 @@ fun main() {
             .map {
                 val rows: List<Int> = it.reflectionLevels()
                 val cols: List<Int> = it.transposed().reflectionLevels()
-                val newRow = rows.firstOrNull { r -> r != oldRow && r > 0 } ?: 0
-                val newCol = cols.firstOrNull { c -> c != oldCol && c > 0 } ?: 0
+                val newRow = (rows - oldRow).firstOrNull() ?: 0
+                val newCol = (cols - oldCol).firstOrNull() ?: 0
                 newRow to newCol
             }
             .distinct()
