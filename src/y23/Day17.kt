@@ -1,12 +1,17 @@
 package y23
 
+import y23.Direction.E
+import y23.Direction.N
+import y23.Direction.S
+import y23.Direction.W
+
 private const val DAY = "17"
 
-data class Node(val position: Position, val direction: Dir)
+data class Node(val position: Position, val direction: Direction)
 
-fun Dir.turningDirections() = when (this) {
-    Dir.N, Dir.S -> listOf(Dir.E, Dir.W)
-    Dir.E, Dir.W -> listOf(Dir.N, Dir.S)
+fun Direction.turningDirections() = when (this) {
+    N, S -> listOf(W, E)
+    W, E -> listOf(N, S)
 }
 
 const val MAX_COST = 10_000_000
@@ -20,7 +25,7 @@ fun main() {
 
         val finalizedCosts = mutableMapOf<Node, Int>()
         val temporaryCosts = mutableMapOf(
-            Node(start, Dir.S) to 0
+            Node(start, S) to 0
         )
 
         while (temporaryCosts.isNotEmpty()) {

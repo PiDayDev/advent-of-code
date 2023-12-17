@@ -2,17 +2,6 @@ package y23
 
 private const val DAY = "10"
 
-data class Position(val x: Int, val y: Int) {
-    operator fun plus(p: Position) = Position(x + p.x, y + p.y)
-    fun around() = listOf(north, south, east, west).map { dir -> this + dir }
-    override fun toString(): String = "($x,$y)"
-}
-
-val north = Position(x = 0, y = -1)
-val south = Position(x = 0, y = +1)
-val east = Position(x = 1, y = 0)
-val west = Position(x = -1, y = 0)
-
 private enum class Shape(val char: Char, vararg val neighbors: Position) {
     NS('|', north, south),
     EW('-', east, west),
