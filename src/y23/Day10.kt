@@ -5,6 +5,7 @@ private const val DAY = "10"
 data class Position(val x: Int, val y: Int) {
     operator fun plus(p: Position) = Position(x + p.x, y + p.y)
     fun around() = listOf(north, south, east, west).map { dir -> this + dir }
+    override fun toString(): String = "($x,$y)"
 }
 
 val north = Position(x = 0, y = -1)
