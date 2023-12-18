@@ -11,6 +11,9 @@ data class Position(val x: Int, val y: Int) {
     operator fun plus(p: Position) =
         Position(x + p.x, y + p.y)
 
+    operator fun times(n: Int) =
+        Position(x * n, y * n)
+
     fun around() =
         listOf(north, south, east, west).map { dir -> this + dir }
 
