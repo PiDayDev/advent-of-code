@@ -1,10 +1,10 @@
 package y23
 
+import java.math.BigInteger
+
 private const val DAY = "21"
 
 fun main() {
-    fun Int.isEven() = this and 1 == 0
-    fun Int.isOdd() = this and 1 > 0
 
     fun dijkstra(input: List<String>, start: Position, max: Int): Map<Position, Int> {
         val distances = mutableMapOf<Position, Int>()
@@ -33,89 +33,102 @@ fun main() {
         return distances.values.count { it % 2 == goal % 2 }
     }
 
-    fun part2(input: List<String>, steps: Int): Long {
-        val xMin = 0
-        val xMax = input.first().lastIndex
+    fun expand(input: List<String>, gridToAddInEachDirection: Int): List<String> {
+        val copy: List<String> = input.map { it.replace('S', '.') }
+        return (-gridToAddInEachDirection..gridToAddInEachDirection).flatMap { y ->
+            copy.mapIndexed { j, s ->
+                s.repeat(gridToAddInEachDirection) + (if (y == 0) input[j] else s) + s.repeat(gridToAddInEachDirection)
+            }
+        }
+    }
 
-        val yMin = 0
-        val yMax = input.lastIndex
+    fun part2(input: List<String>): BigInteger {
+        // Note that:
+        // - starting cell is in the center of a square grid, with dimension 131 x 131;
+        // - there are no obstacles on the first row, last row, and the row of starting cell;
+        // - the same is true for columns;
+        // - so every cell on the grid borders can be reached in Manhattan distance
+        //   (e.g. 65 for the middle point of each side, 131 for each corner);
+        // - step goal 26_501_365 equals 65 [= distance from center to middle point of border] modulo 131 [= grid width].
 
-        val rowStart = input.first { 'S' in it }
-        val xStart = rowStart.indexOf('S')
-        val yStart = input.indexOf(rowStart)
+        // When we tile multiple copies of the grid next to each other, confining tiles have different parity,
+        //  meaning that each cell that is reached with an even number of steps in the starting grid can be reached
+        //  with an odd number of steps in the grids directly above/below/left/right (and again with an even number if we move one grid farther).
+        // See visualizations/Day21.png: green cells are reached with odd number of steps and yellow with even;
+        //  grids with red stripes have the same parity of central grid, that has a "S" character in its center.
 
-        val distances = dijkstra(input, Position(xStart, yStart), xMax + yMax)
+        // Given the above, after taking enough steps to cover a few copies of the grids, adding 262 steps will just
+        //  add more copies of the same kind of grids, with the same step patterns.
+        //  Since we are moving on a plane (2 dimensions), this suggests there should be a quadratic formula
+        //  that gives the number of reached cells (y) given the number of steps (x), and that is valid for
+        //   x = 65 + 262*n, with n>1 (for n = 1 we'd still be in the initial grid).
 
-        val evenTot = distances.values.count(Int::isEven)
-        val oddTot = distances.values.count(Int::isOdd)
+        // The formula is  y=ax²+bx+c  ==> we can compute y for three different (small) x by re-using part1,
+        //  then plug in the values in the formula and solve the resulting system of 3 linear equations for a,b,c
 
-        val width = input.first().length
+        val expandedInput = expand(input, 6)
+        println("\n Linear equation system")
+        val (eq1, eq2, eq3) = (1..3).map { n ->
+            val x = 65 + 262 * n
+            val y = part1(input = expandedInput, goal = x)
+            val equation = Equation(x * x, x, 1, y)
+            println("($n) $equation")
+            equation
+        }
 
-        val distanceCenterCorner = width - 1
-        val distanceCenterBorder = distanceCenterCorner / 2
+        println("\n Solving by elimination...")
 
-        // total squares in horizontal from center to spike
-        val tsqh = (steps - distanceCenterBorder) / width
+        val eqA = (eq1 + eq3 - eq2 * 2).simplify()
+        println("(A) $eqA".padEnd(40) + " | combination of (1),(2),(3) to eliminate b & c ==> find <a>")
 
-        val squaresLikeStart = (tsqh - 1).toLong().let { it * it }
-        val squaresAlternate = tsqh.toLong().let { it * it }
+        val eq12 = (eq1 - eq2).simplify()
+        val eqB = (eq12 * eqA.c1 - eqA * eq12.c1).simplify()
+        println("(B) $eqB".padEnd(40) + " | combination of (1),(2),(A) to eliminate a & c ==> find <b>")
 
-        val spikesCount = 1
-        val smallCornersCount = tsqh
-        val largeCornersCount = tsqh - 1
+        val eq1A = (eq1 * eqA.c1 - eqA * eq1.c1).simplify()
+        val eqC = (eq1A * eqB.c2 - eqB * eq1A.c2).simplify()
+        println("(C) $eqC".padEnd(40) + " | combination of (1),(A),(B) to eliminate a & b ==> find <c>")
 
-        val residualDistForLargeCorner = distanceCenterBorder + distanceCenterCorner
-        val residualDistForSmallCorner = distanceCenterBorder - 1
+        assert(eqA.c2 == 0L && eqA.c3 == 0L)
+        assert(eqB.c1 == 0L && eqB.c3 == 0L)
+        assert(eqC.c1 == 0L && eqC.c2 == 0L)
+        assert(eqA.c1 == eqB.c2 && eqB.c2 == eqC.c3)
 
-        println(
-            """
-            vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-            Distanza centro - bordo sulla board    $distanceCenterCorner
-            Distanza centro - angolo sulla board   $distanceCenterBorder
-            Larghezza == altezza                   $width
-            Passi totali                           $steps
-             
-            Board totali in orizz.dal centro       $tsqh
-            Board con scacchiera come inizio       $squaresLikeStart
-            Board con scacchiera opposta           $squaresAlternate
-             
-            Punte                                  $spikesCount per ogni tipo
-            Angoli interni (grandi)                $largeCornersCount per ogni tipo
-            Angoli esterni (piccoli)               $smallCornersCount per ogni tipo
-             
-            Dist.residua punte                     $distanceCenterCorner
-            Dist.residua angoli interni (grandi)   $residualDistForLargeCorner
-            Dist.residua angoli esterni (piccoli)  $residualDistForSmallCorner
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        """.trimIndent()
-        )
+        val aNum = eqA.term.toBigInteger()
+        val bNum = eqB.term.toBigInteger()
+        val cNum = eqC.term.toBigInteger()
+        val den = eqA.c1.toBigInteger()
 
-        fun Map<Position, Int>.spikeCount() = values.count { it.isEven() }
-        val spikeN = dijkstra(input, Position(xStart, yMax), distanceCenterCorner).spikeCount()
-        val spikeS = dijkstra(input, Position(xStart, yMin), distanceCenterCorner).spikeCount()
-        val spikeW = dijkstra(input, Position(xMax, yStart), distanceCenterCorner).spikeCount()
-        val spikeE = dijkstra(input, Position(xMin, yStart), distanceCenterCorner).spikeCount()
 
-        fun Map<Position, Int>.largeCornerCount() = values.count { it.isOdd() }
-        val largeNE = dijkstra(input, Position(xMin, yMax), residualDistForLargeCorner).largeCornerCount()
-        val largeNW = dijkstra(input, Position(xMax, yMax), residualDistForLargeCorner).largeCornerCount()
-        val largeSE = dijkstra(input, Position(xMin, yMin), residualDistForLargeCorner).largeCornerCount()
-        val largeSW = dijkstra(input, Position(xMax, yMin), residualDistForLargeCorner).largeCornerCount()
-
-        fun Map<Position, Int>.smallCornerCount() = values.count { it.isEven() }
-        val smallNE = dijkstra(input, Position(xMin, yMax), residualDistForSmallCorner).smallCornerCount()
-        val smallNW = dijkstra(input, Position(xMax, yMax), residualDistForSmallCorner).smallCornerCount()
-        val smallSE = dijkstra(input, Position(xMin, yMin), residualDistForSmallCorner).smallCornerCount()
-        val smallSW = dijkstra(input, Position(xMax, yMin), residualDistForSmallCorner).smallCornerCount()
-
-        return oddTot.toLong() * squaresLikeStart +
-                evenTot.toLong() * squaresAlternate +
-                (spikeN + spikeS + spikeW + spikeE).toLong() +
-                (largeNE + largeNW + largeSE + largeSW).toLong() * largeCornersCount +
-                (smallNE + smallNW + smallSE + smallSW).toLong() * smallCornersCount
+        val steps = 26_501_365.toBigInteger()
+        println("\n Resulting equation")
+        println("y = ($aNum x² + $bNum x + $cNum) / $den")
+        println("  = ($aNum * ${steps*steps} + $bNum * $steps + $cNum) / $den")
+        return (aNum * steps * steps + bNum * steps + cNum) / den
     }
 
     val input = readInput("Day$DAY")
-    println(part1(input, 64))
-    println(part2(input, 26_501_365))
+    println("PART 1 = ${part1(input, 64)}")
+    println("PART 2 = ${part2(input)}")
+
 }
+
+private data class Equation(val c1: Long, val c2: Long, val c3: Long, val term: Long) {
+    constructor(p: Int, q: Int, r: Int, s: Int) : this(p.toLong(), q.toLong(), r.toLong(), s.toLong())
+
+    override fun toString(): String = "$c1 a + $c2 b + $c3 c = $term"
+
+    operator fun times(n: Long) = Equation(c1 * n, c2 * n, c3 * n, term * n)
+    operator fun div(n: Long) = Equation(c1 / n, c2 / n, c3 / n, term / n)
+    operator fun unaryMinus() = this * -1
+    operator fun plus(e: Equation) = Equation(c1 + e.c1, c2 + e.c2, c3 + e.c3, term + e.term)
+    operator fun minus(e: Equation) = this + -e
+
+    private tailrec fun gcd(a: Long, b: Long): Long = if (b == 0L) a else gcd(b, a % b)
+
+    fun simplify(): Equation {
+        val g = gcd(gcd(c1, c2), gcd(c3, term))
+        return if (g == 0L) this else this / g
+    }
+}
+
