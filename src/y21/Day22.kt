@@ -124,9 +124,9 @@ fun main() {
         )
 
         var total = 0L
-        xStops.chunked(3).forEachIndexed { index, someX ->
+        xStops.chunked(3).forEach { someX ->
             val on: MutableMap<Int, MutableMap<Int, MutableMap<Int, Boolean>>> = mutableMapOf()
-            instructions.forEachIndexed { i, step ->
+            instructions.forEach { step ->
                 follow(step, someX, yStops, zStops, on)
             }
             total += howManyOn(on, xStops, yStops, zStops)

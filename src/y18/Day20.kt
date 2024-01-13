@@ -78,7 +78,7 @@ private class Node20(
             rest = rest.drop(leaf.length)
             if (rest.isNotEmpty()) when (rest[0]) {
                 '(' -> {
-                    val end = rest.findMatchingParenthesis(0)
+                    val end = rest.findMatchingParenthesis()
                     val part = rest.substring(0..end).removeSurrounding("(", ")")
                     val splitIndices = part.mapIndexedNotNull { index, c ->
                         if (c != '|') null
@@ -136,12 +136,13 @@ private fun String.splitAt(indices: Iterable<Int>): List<String> {
 
 private fun String.hasBalance() = count { it == ')' } == count { it == '(' }
 
-private fun String.findMatchingParenthesis(index: Int): Int =
-    when (this[index]) {
-        '(' -> (index + 1 until length).filter { this[it] == ')' }.first { substring(index..it).hasBalance() }
-        ')' -> (0 until index).filter { this[it] == '(' }.last { substring(it..index).hasBalance() }
-        else -> throw IllegalArgumentException("Char at $index is ${this[index]}")
-    }
+private fun String.findMatchingParenthesis(): Int =
+    if (first() == '(')
+        (1 until length)
+            .filter { get(it) == ')' }
+            .first { take(it).hasBalance() }
+    else
+        throw IllegalArgumentException()
 
 private const val FREE_ROOM = "°"
 private const val START_ROOM = "O"
