@@ -30,5 +30,12 @@ enum class Direction(val movement: Position) {
     N(north),
     S(south),
     W(west),
-    E(east)
+    E(east);
+
+    fun turnRight() = when(this) {
+        N -> E
+        E -> S
+        S -> W
+        W -> N
+    }
 }
