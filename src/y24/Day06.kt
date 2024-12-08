@@ -3,35 +3,21 @@ package y24
 private const val DAY = "06"
 
 fun main() {
-    fun part1(initialState: State): Int {
-        val finalState = generateSequence(initialState) {
-            if (it.isTerminal()) null else it.move()
-        }.last()
-        return finalState.previous.distinctBy { it.position }.count()
-    }
 
-    fun willLoop(state: State) = generateSequence(state) {
-        if (it.isTerminal() || it.isLoop()) null else it.move()
-    }.last().isLoop()
+    fun part1(state: State): Int =
+        state.simulateGuard().distinctBy { it.position }.count()
 
-    /* FIXME DAMIANO low performance */
     fun part2(state: State): Int {
-        var counter = 0
-        (0 until state.height).forEach { y ->
-            (0 until state.width).forEach { x ->
-                val candidate = Position(x, y)
-                if (candidate !in state.obstructions) {
-                    val newState = state.copy(obstructions = state.obstructions + candidate)
-                    if (willLoop(newState)) counter++
-                }
-            }
+        val candidates = state.simulateGuard().map { it.position }.toSet()
+        return candidates.count {
+            state.withNewObstruction(it).willLoop()
         }
-        return counter
     }
 
     val initialState = readInput("Day$DAY").toState()
     println(part1(initialState))
     println(part2(initialState))
+
 }
 
 private data class Guard(val position: Position, val direction: Direction) {
@@ -39,30 +25,50 @@ private data class Guard(val position: Position, val direction: Direction) {
 }
 
 private data class State(
-    val width: Int,
-    val height: Int,
-    val obstructions: List<Position>,
-    val guard: Guard,
-    val previous: List<Guard> = emptyList()
+    private val width: Int,
+    private val height: Int,
+    private val obstructions: Set<Position>,
+    private val guard: Guard,
+    private val previousGuardStates: MutableSet<Guard> = mutableSetOf()
 ) {
-    fun isTerminal() = guard.position.x !in 0 until width ||
-            guard.position.y !in 0 until height
+    fun withNewObstruction(newObstruction: Position) =
+        copy(obstructions = obstructions + newObstruction, previousGuardStates = mutableSetOf())
 
-    fun isLoop() = guard in previous
+    fun simulateGuard(): Set<Guard> =
+        generateSequence(this) { it.move() }
+            .dropWhile { !it.isTerminal() }
+            .first()
+            .previousGuardStates
 
-    fun move(): State {
+    fun willLoop(): Boolean =
+        generateSequence(this) { it.move() }
+            .dropWhile { !it.isTerminal() && !it.isLoop() }
+            .first()
+            .isLoop()
+
+    private fun move(): State {
         val newGuard = when (val candidatePos = guard.position + guard.direction.movement) {
             in obstructions -> guard.turnRight()
             else -> guard.copy(position = candidatePos)
         }
-        return copy(guard = newGuard, previous = previous + guard)
+        // Using (shared) mutable for performance reason
+        previousGuardStates += guard
+        return copy(guard = newGuard)
     }
+
+    private fun isTerminal() = guard.position.run {
+        x !in 0 until width || y !in 0 until height
+    }
+
+    private fun isLoop() = guard in previousGuardStates
+
+
 }
 
 private fun List<String>.toState(): State {
     val height = this.count()
     val width = first().count()
-    val obstructions = mutableListOf<Position>()
+    val obstructions = mutableSetOf<Position>()
     val guardPositions = mutableListOf<Position>()
     forEachIndexed { y, row ->
         row.forEachIndexed { x, c ->
