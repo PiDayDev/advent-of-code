@@ -2,10 +2,12 @@ package y24
 
 private const val DAY = "07"
 
+private typealias Operator = (Long, Long) -> Long
+
 fun main() {
-    val sum: (Long, Long) -> Long = { a, b -> a + b }
-    val product: (Long, Long) -> Long = { a, b -> a * b }
-    val concat: (Long, Long) -> Long = { a, b -> "$a$b".toLong() }
+    val sum: Operator = { a, b -> a + b }
+    val product: Operator = { a, b -> a * b }
+    val concat: Operator = { a, b -> "$a$b".toLong() }
 
     fun part1(input: List<Equation>) = input
         .filter { it.isSolvable(setOf(sum, product)) }
@@ -19,14 +21,6 @@ fun main() {
     println(part1(input))
     println(part2(input))
 }
-
-private fun String.toEquation(): Equation {
-    val result = substringBefore(":").toLong()
-    val operands = substringAfter(": ").split(" ").map { it.toLong() }
-    return Equation(result, operands)
-}
-
-typealias Operator = (Long, Long) -> Long
 
 private data class Equation(val expected: Long, val operands: List<Long>) {
 
@@ -42,4 +36,10 @@ private data class Equation(val expected: Long, val operands: List<Long>) {
             isSolvable(availableOperators, chosenOperators + listOf(op))
         }
     }
+}
+
+private fun String.toEquation(): Equation {
+    val result = substringBefore(":").toLong()
+    val operands = substringAfter(": ").split(" ").map { it.toLong() }
+    return Equation(result, operands)
 }
