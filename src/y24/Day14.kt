@@ -1,5 +1,9 @@
 package y24
 
+import java.io.File
+import java.io.FileWriter
+import java.io.PrintWriter
+
 private const val DAY = "14"
 
 typealias Velocity = Position
@@ -7,7 +11,11 @@ typealias Velocity = Position
 data class Quadrant(
     val xRange: IntRange,
     val yRange: IntRange,
-)
+) {
+    operator fun contains(position: Position) =
+        position.x in xRange && position.y in yRange
+
+}
 
 data class Grid(val width: Int, val height: Int) {
     fun constrain(newRobot: Robot): Position {
@@ -19,15 +27,15 @@ data class Grid(val width: Int, val height: Int) {
     }
 
     fun quadrants(): List<Quadrant> {
-        val xMiddle = width/2
-        val yMiddle = height/2
-        val (x1,x2,x3,x4) = listOf(0,xMiddle-1,xMiddle+1,width-1)
-        val (y1,y2,y3,y4) = listOf(0,yMiddle-1,yMiddle+1,height-1)
+        val xMiddle = width / 2
+        val yMiddle = height / 2
+        val (x1, x2, x3, x4) = listOf(0, xMiddle - 1, xMiddle + 1, width - 1)
+        val (y1, y2, y3, y4) = listOf(0, yMiddle - 1, yMiddle + 1, height - 1)
         return listOf(
-            Quadrant(x1..x2,y1..y2),
-            Quadrant(x3..x4,y1..y2),
-            Quadrant(x1..x2,y3..y4),
-            Quadrant(x3..x4,y3..y4),
+            Quadrant(x1..x2, y1..y2),
+            Quadrant(x3..x4, y1..y2),
+            Quadrant(x1..x2, y3..y4),
+            Quadrant(x3..x4, y3..y4),
         )
     }
 }
@@ -64,26 +72,53 @@ fun parseAndMove100Times(input: List<String>, grid: Grid): List<Position> =
         .map { it.position }
 
 
-fun List<Position>.countIn(xRange: IntRange, yRange: IntRange): Int =
-    count { position -> position.x in xRange && position.y in yRange }
+infix fun List<Position>.countIn(quadrant: Quadrant): Int = count { it in quadrant }
 
 fun safetyFactor(input: List<String>, grid: Grid): Int {
- val finalPositions = parseAndMove100Times(input, grid)
+    val finalPositions = parseAndMove100Times(input, grid)
     val quadrants = grid.quadrants()
 
-    val counts = quadrants.map { finalPositions.countIn(it.xRange, it.yRange) }
+    val counts = quadrants.map { finalPositions countIn it }
 
-    return counts.reduce { a,b -> a * b }
+    return counts.reduce { a, b -> a * b }
 }
 
 fun main() {
     fun part1(input: List<String>): Int {
-        val grid = Grid(101,103)
+        val grid = Grid(101, 103)
         return safetyFactor(input, grid)
     }
 
+    fun PrintWriter.printRobots(robots: List<Robot>, grid: Grid) {
+        val positions = robots.map { it.position }.toSet()
+        (0 until grid.height).forEach { y ->
+            (0 until grid.width).forEach { x ->
+                val position = Position(x, y)
+                print(if (position in positions) '*' else '.')
+            }
+            println()
+        }
+    }
+
     fun part2(input: List<String>): Int {
-        return input.size
+        val file = File("Day14.tree.txt")
+        val writer = PrintWriter(FileWriter(file))
+        var robots = input.map { it.toRobot() }
+        val grid = Grid(101, 103)
+        repeat(10000) { s ->
+            robots = robots.map { it.moveInside(grid) }
+            if ((s - 835) % 101 == 0) {
+                writer.println("Sono al secondo $s")
+                writer.printRobots(robots, grid)
+                writer.println()
+                writer.println()
+                writer.println("-".repeat(105))
+                writer.println()
+                writer.println()
+            }
+        }
+
+        return 0
     }
 
     // test if implementation meets criteria from the description, like:

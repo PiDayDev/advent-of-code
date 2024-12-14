@@ -106,7 +106,8 @@ class Day14KtTest {
             Position(6, 6),
         )
 
-        val result = positions.countIn(0..4, 0..2)
+        val quadrant = Quadrant(0..4, 0..2)
+        val result = positions countIn quadrant
 
         assertEquals(1, result)
     }
