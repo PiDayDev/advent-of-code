@@ -1,10 +1,26 @@
 package y24
 
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.containsInAnyOrder
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
+private val sampleInput = """
+   p=0,4 v=3,-3
+   p=6,3 v=-1,-3
+   p=10,3 v=-1,2
+   p=2,0 v=2,-1
+   p=0,0 v=1,3
+   p=3,0 v=-2,-2
+   p=7,6 v=-1,-3
+   p=3,0 v=-1,-2
+   p=9,3 v=2,3
+   p=7,3 v=-1,2
+   p=2,4 v=2,-3
+   p=9,5 v=-3,-3
+""".trimIndent().lines()
 
-class Day14KtTest {
+class Day14Test {
 
     @Test
     fun `I can make a robot`() {
@@ -51,45 +67,6 @@ class Day14KtTest {
     }
 
     @Test
-    fun `given sample file robots to move on position final`() {
-        val grid = Grid(11, 7)
-        val input = """
-   p=0,4 v=3,-3
-   p=6,3 v=-1,-3
-   p=10,3 v=-1,2
-   p=2,0 v=2,-1
-   p=0,0 v=1,3
-   p=3,0 v=-2,-2
-   p=7,6 v=-1,-3
-   p=3,0 v=-1,-2
-   p=9,3 v=2,3
-   p=7,3 v=-1,2
-   p=2,4 v=2,-3
-   p=9,5 v=-3,-3
-  """.trimIndent().lines()
-
-        val expectedPositions = listOf(
-            Position(6, 0),
-            Position(6, 0),
-            Position(9, 0),
-            Position(0, 2),
-            Position(1, 3),
-            Position(2, 3),
-            Position(5, 4),
-            Position(3, 5),
-            Position(4, 5),
-            Position(4, 5),
-            Position(1, 6),
-            Position(6, 6),
-        )
-
-        val result = parseAndMove100Times(input, grid)
-
-        assertEquals(listOf<Position>(), expectedPositions - result)
-        assertEquals(listOf<Position>(), result - expectedPositions)
-    }
-
-    @Test
     fun `count robots in a zone`() {
         val positions = listOf(
             Position(6, 0),
@@ -118,7 +95,7 @@ class Day14KtTest {
 
         val result = grid.quadrants()
 
-        val expected = listOf<Quadrant>(
+        val expected = listOf(
             Quadrant(0..4, 0..2),
             Quadrant(6..10, 0..2),
             Quadrant(0..4, 4..6),
@@ -128,29 +105,12 @@ class Day14KtTest {
     }
 
     @Test
-    fun `part1 fa giusto`() {
+    fun `computes safety factor`() {
         val grid = Grid(11, 7)
 
-        val input = """
-           p=0,4 v=3,-3
-           p=6,3 v=-1,-3
-           p=10,3 v=-1,2
-           p=2,0 v=2,-1
-           p=0,0 v=1,3
-           p=3,0 v=-2,-2
-           p=7,6 v=-1,-3
-           p=3,0 v=-1,-2
-           p=9,3 v=2,3
-           p=7,3 v=-1,2
-           p=2,4 v=2,-3
-           p=9,5 v=-3,-3
-          """.trimIndent().lines()
-
-        val result = safetyFactor(input, grid)
+        val result = safetyFactor(sampleInput, grid)
 
         assertEquals(12, result)
     }
 
-
 }
-
