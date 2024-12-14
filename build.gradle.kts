@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.6.0"
+    kotlin("jvm") version "1.7.22"
 }
 
 repositories {
@@ -9,7 +9,10 @@ repositories {
 tasks {
     sourceSets {
         main {
-            java.srcDirs("src")
+            kotlin.srcDirs("src")
+        }
+        test {
+            kotlin.srcDirs("test")
         }
     }
 
@@ -21,4 +24,7 @@ tasks {
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
+    testImplementation("org.hamcrest:hamcrest:3.0")
+
 }
