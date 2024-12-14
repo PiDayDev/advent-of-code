@@ -83,6 +83,9 @@ fun safetyFactor(input: List<String>, grid: Grid): Int {
     return counts.reduce { a, b -> a * b }
 }
 
+fun dispersion(positions: Set<Position>): Double =
+    positions.sumOf { it.around().count { p -> p in positions } }/(4.0*positions.size)
+
 fun main() {
     fun part1(input: List<String>): Int {
         val grid = Grid(101, 103)
@@ -105,18 +108,12 @@ fun main() {
         val writer = PrintWriter(FileWriter(file))
         var robots = input.map { it.toRobot() }
         val grid = Grid(101, 103)
-        repeat(10000) { s ->
+        val result = (1..10000).map { s ->
             robots = robots.map { it.moveInside(grid) }
-            if ((s - 835) % 101 == 0) {
-                writer.println("Sono al secondo $s")
-                writer.printRobots(robots, grid)
-                writer.println()
-                writer.println()
-                writer.println("-".repeat(105))
-                writer.println()
-                writer.println()
-            }
+            s to dispersion(robots.map { it.position }.toSet())
         }
+        result.sortedByDescending { it.second }
+            .forEach(::println)
 
         return 0
     }
