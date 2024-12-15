@@ -53,13 +53,7 @@ private class Antennas(
 private fun List<String>.toAntennas(): Antennas {
     val height = count()
     val width = first().count()
-    val map = mutableMapOf<Char, MutableList<Position>>()
-    forEachIndexed { y, row ->
-        row.forEachIndexed { x, c ->
-            val list = map.getOrPut(c) { mutableListOf() }
-            list += Position(x, y)
-        }
-    }
+    val map = classifyByChar()
     return Antennas(width, height, map.filterKeys { it != '.' })
 }
 

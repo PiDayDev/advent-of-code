@@ -6,7 +6,7 @@ fun main() {
     fun part1(codes: List<Long>): Int {
         val sb = StringBuilder()
         IntCodeProcessor(codes).process(iterator { }) { sb.append(Char(it.toInt())) }
-        val rows = sb.split("\n").filter { it.isNotBlank() }
+        val rows = sb.lines().filter { it.isNotBlank() }
         println("     " + rows[0].indices.joinToString("") { if (it < 10) " " else "${it / 10}" })
         println("     " + rows[0].indices.joinToString("") { "${it % 10}" })
         rows.forEachIndexed { y, s ->

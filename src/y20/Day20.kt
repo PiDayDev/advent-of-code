@@ -194,10 +194,10 @@ fun main() {
         val picture = compose(tiles)
 
         val nessie = """
-                  # 
-#    ##    ##    ###
- #  #  #  #  #  #   
-        """.trimIndent().split('\n')
+                              # 
+            #    ##    ##    ###
+             #  #  #  #  #  #   
+        """.trimIndent().lines()
         val nessiePositions = nessie.flatMapIndexed { y, row ->
             row.mapIndexedNotNull { x, c ->
                 if (c == '#') x to y else null
