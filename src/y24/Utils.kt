@@ -9,6 +9,11 @@ data class Position(val x: Int, val y: Int) {
     operator fun plus(p: Position) =
         Position(x + p.x, y + p.y)
 
+    operator fun minus(p: Position) =
+        Position(x - p.x, y - p.y)
+
+    operator fun plus(d: Direction) = this + d.movement
+
     operator fun times(n: Int) =
         Position(x * n, y * n)
 
@@ -42,7 +47,7 @@ enum class Direction(val movement: Position) {
     W(west),
     E(east);
 
-    fun turnRight() = when(this) {
+    fun turnRight() = when (this) {
         N -> E
         E -> S
         S -> W
