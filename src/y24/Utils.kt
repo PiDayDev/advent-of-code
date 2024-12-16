@@ -53,4 +53,6 @@ enum class Direction(val movement: Position) {
         S -> W
         W -> N
     }
+
+    fun turnLeft() = turnRight().turnRight().turnRight()
 }
