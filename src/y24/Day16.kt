@@ -3,43 +3,17 @@ package y24
 private const val DAY = "16"
 
 fun main() {
-    fun part1(input: List<String>): Long {
-        val pointsOfInterest = input.toPOIs()
-//        println(pointsOfInterest)
-        val maze = pointsOfInterest.toDeerMaze()
-//        println(maze)
-        return maze.minDistanceFromStartToEnd()
-    }
-
-    fun part2(input: List<String>): Int {
-        return input.size
-    }
-
-    // test if implementation meets criteria from the description, like:
-    val testInput = """
-             ###############
-             #.......#....E#
-             #.#.###.#.###.#
-             #.....#.#...#.#
-             #.###.#####.#.#
-             #.#.#.......#.#
-             #.#.#####.###.#
-             #...........#.#
-             ###.#.#####.#.#
-             #...#.....#.#.#
-             #.#.#.###.#.#.#
-             #.....#...#.#.#
-             #.###.#.#.#.#.#
-             #S..#.....#...#
-             ###############
-         """.trimIndent().lines()
-    val t1 = part1(testInput)
-    println("TEST 1: $t1")
-    check(t1 == 7036L)
+    test()
 
     val input = readInput("Day$DAY")
-    println(part1(input))
-    println(part2(input))
+    val pointsOfInterest = input.toPOIs()
+    val maze = pointsOfInterest.toDeerMaze()
+
+    val minDistance = maze.minDistanceFromStartToEnd
+    println("PART 1: $minDistance")
+
+    val niceSpots = countNiceSpots(maze, pointsOfInterest.road)
+    println("PART 2: $niceSpots")
 }
 
 private data class PointsOfInterest(
@@ -99,30 +73,14 @@ private data class PointsOfInterest(
     }
 }
 
-private fun List<String>.toPOIs(): PointsOfInterest {
-    val x = classifyByChar()
-    val start = x['S']!!.first()
-    val end = x['E']!!.first()
-    val road = x['.']!!.toSet()
-    // mostly cares about turning points => exclude points with space exactly on two opposite sides
-    val points = mutableSetOf(start, end)
-    road.forEach { p ->
-        val ns = listOf(p + Direction.N, p + Direction.S).count { it in points || it in road }
-        val we = listOf(p + Direction.W, p + Direction.E).count { it in points || it in road }
-        if (!(ns == 2 && we == 0) && !(ns == 0 && we == 2))
-            points += p
-    }
-    return PointsOfInterest(start = start, end = end, poi = points, road = road)
-}
-
-private data class MazeNode(val position: Position, val direction: Direction) {
-    override fun toString(): String = "$position$direction"
-}
-
-private fun Position.toMazeNodes() = Direction.values().map { MazeNode(position = this, direction = it) }
+private data class MazeNode(val position: Position, val direction: Direction)
 
 private data class MazeEdge(val from: MazeNode, val to: MazeNode, val cost: Int) {
-    override fun toString(): String = "$from--[$cost]-->$to"
+    fun invert() = MazeEdge(
+        to = from.copy(direction = from.direction.opposite()),
+        from = to.copy(direction = to.direction.opposite()),
+        cost = cost
+    )
 }
 
 private data class DeerMaze(
@@ -131,44 +89,132 @@ private data class DeerMaze(
     val nodes: Set<MazeNode>,
     val edges: Set<MazeEdge>
 ) {
-    fun edgesFrom(node: MazeNode) = edges.filter { it.from == node }
+    fun invertStartingOnDirection(direction: Direction) = DeerMaze(
+        start = ends.first { it.direction == direction },
+        ends = start.position.toMazeNodes().toSet(),
+        nodes = nodes,
+        edges = edges.map { it.invert() }.toSet(),
+    )
 
-    fun minDistanceFromStartToEnd(): Long =
-        dijkstraMinPaths(start)
+    private val edgeMap: Map<MazeNode, List<MazeEdge>> = edges.groupBy { it.from }
+
+    val minDistancesFromStart: Map<MazeNode, Long> by lazy {
+        dijkstraMinDistancesFrom(start)
+    }
+
+    val minDistanceFromStartToEnd: Long by lazy {
+        minDistancesFromStart
             .filterKeys { it in ends }
             .values
             .min()
     }
 
-    private fun dijkstraMinPaths(source: MazeNode): Map<MazeNode, Long> {
-        val dist = mutableMapOf<MazeNode, Long>()
-        val prev = mutableMapOf<MazeNode, MazeNode>()
-        val queue = nodes.toMutableSet()
-        dist[source] = 0L
-        while (queue.isNotEmpty()) {
-            val u = queue.minBy { dist[it] ?: Long.MAX_VALUE }
-            queue -= u
-            val d = dist[u] ?: break
+    private fun edgesFrom(node: MazeNode) = edgeMap[node] ?: emptyList()
 
-            edgesFrom(u).forEach { edge ->
-                val (_, v, cost) = edge
-                val alt = d + cost
-                if (alt < (dist[v] ?: Long.MAX_VALUE)) {
-                    dist[v] = alt
-                    prev[v] = u
+    private fun dijkstraMinDistancesFrom(source: MazeNode): Map<MazeNode, Long> {
+        val distances = mutableMapOf(source to 0L)
+        val previous = mutableMapOf<MazeNode, MazeNode>()
+        val queue = nodes.toMutableSet()
+        while (queue.isNotEmpty()) {
+            val next = distances.filterKeys { it in queue }.minByOrNull { it.value }
+            if (next == null) break
+            val (node, totalCostToNode) = next
+            queue -= node
+
+            edgesFrom(node).forEach { edge ->
+                val (_, destination, cost) = edge
+                val destinationCost = totalCostToNode + cost
+                if (destinationCost < (distances[destination] ?: Long.MAX_VALUE)) {
+                    distances[destination] = destinationCost
+                    previous[destination] = node
                 }
             }
         }
-        return dist
+        return distances
+    }
+}
+
+private fun List<String>.toPOIs(): PointsOfInterest {
+    val x = classifyByChar()
+    val start = x['S']!!.first()
+    val end = x['E']!!.first()
+    val road = x['.']!!.toSet()
+    val points = mutableSetOf(start, end)
+    road.forEach { p ->
+        val ns = listOf(p + Direction.N, p + Direction.S).count { it in points || it in road }
+        val we = listOf(p + Direction.W, p + Direction.E).count { it in points || it in road }
+        // mostly cares about turning points => exclude straight corridors and dead ends
+        val isVerticalCorridor = ns == 2 && we == 0
+        val isHorizontalCorridor = ns == 0 && we == 2
+        val isDeadEnd = ns + we <= 1
+        if (!isVerticalCorridor && !isHorizontalCorridor && !isDeadEnd)
+            points += p
+    }
+    return PointsOfInterest(start = start, end = end, poi = points, road = road)
+}
+
+private fun Position.toMazeNodes() = Direction.values()
+    .map { MazeNode(position = this, direction = it) }
+
+private fun countNiceSpots(maze: DeerMaze, road: Set<Position>): Int {
+    val minDistance = maze.minDistanceFromStartToEnd
+
+    val bestDistancesFromStart = maze.minDistancesFromStart
+
+    val bestDistancesToEnd = mutableMapOf<MazeNode, Long>()
+    Direction.values().forEach { dir ->
+        val minDistances = maze.invertStartingOnDirection(dir).minDistancesFromStart
+        minDistances.forEach { (node, distance) ->
+            bestDistancesToEnd[node] = distance.coerceAtMost(bestDistancesToEnd[node] ?: distance)
+        }
     }
 
-    override fun toString(): String {
-        val b = StringBuilder()
-        b.appendLine("START = $start")
-        ends.forEachIndexed { index, end ->
-            b.appendLine("END#$index = $end")
+    val minCostPOIs: List<Position> = bestDistancesFromStart
+        .keys
+        .filter { node -> bestDistancesFromStart[node]!! + bestDistancesToEnd[node]!! <= minDistance }
+        .map { it.position }
+
+    val spots: MutableSet<Position> = minCostPOIs.toMutableSet()
+    val walkable: Set<Position> = road + minCostPOIs
+    for (j in minCostPOIs.indices) {
+        for (k in j + 1..minCostPOIs.lastIndex) {
+            val p1 = minCostPOIs[j]
+            val p2 = minCostPOIs[k]
+            if (p1.x != p2.x && p1.y != p2.y) continue
+
+            val range = p1..p2
+            if (range.all { it in walkable })
+                spots += range
         }
-        edges.forEach { if (it.cost != 1000) b.appendLine(it) }
-        return b.toString()
     }
+    return spots.size
+}
+
+private fun test() {
+    // test if implementation meets criteria from the description
+    val testPOIs = """
+         ###############
+         #.......#....E#
+         #.#.###.#.###.#
+         #.....#.#...#.#
+         #.###.#####.#.#
+         #.#.#.......#.#
+         #.#.#####.###.#
+         #...........#.#
+         ###.#.#####.#.#
+         #...#.....#.#.#
+         #.#.#.###.#.#.#
+         #.....#...#.#.#
+         #.###.#.#.#.#.#
+         #S..#.....#...#
+         ###############
+     """.trimIndent()
+        .lines().toPOIs()
+    val testMaze = testPOIs.toDeerMaze()
+    val t1 = testMaze.minDistanceFromStartToEnd
+    println("TEST 1: $t1")
+    check(t1 == 7036L)
+    val t2 = countNiceSpots(testMaze, testPOIs.road)
+    println("TEST 2: $t2")
+    check(t2 == 45)
 }
