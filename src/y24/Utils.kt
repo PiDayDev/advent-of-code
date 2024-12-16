@@ -17,6 +17,16 @@ data class Position(val x: Int, val y: Int) {
     operator fun times(n: Int) =
         Position(x * n, y * n)
 
+    operator fun rangeTo(p: Position): Set<Position> {
+        val (x1, x2) = listOf(x, p.x).sorted()
+        val (y1, y2) = listOf(y, p.y).sorted()
+        return (y1..y2).flatMap { y ->
+            (x1..x2).map { x ->
+                Position(x, y)
+            }
+        }.toSet()
+    }
+
     fun around() =
         listOf(north, south, east, west).map { dir -> this + dir }
 
@@ -55,4 +65,6 @@ enum class Direction(val movement: Position) {
     }
 
     fun turnLeft() = turnRight().turnRight().turnRight()
+
+    fun opposite() = turnRight().turnRight()
 }
