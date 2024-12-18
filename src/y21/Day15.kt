@@ -60,7 +60,7 @@ fun main() {
         return largeMap.shortestPath()
     }
 
-    // test if implementation meets criteria from the description, like:
+    // test if implementation meets criteria from the description
     try {
         val testInput = readInput("Day${day}_test")
         val test1 = part1(testInput)

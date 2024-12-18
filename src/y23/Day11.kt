@@ -18,7 +18,7 @@ fun main() {
         var total = 0L
         for (i in galaxies.indices) {
             val first = galaxies[i]
-            for (j in i + 1..galaxies.indices.last) {
+            for (j in i + 1..galaxies.lastIndex) {
                 val second = galaxies[j]
                 val baseDistance = manhattan(first, second)
                 val expansionCount = expandingCols.count { it in range(first.x, second.x) } +

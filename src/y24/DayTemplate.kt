@@ -11,7 +11,7 @@ fun main() {
         return input.size
     }
 
-    // test if implementation meets criteria from the description, like:
+    // test if implementation meets criteria from the description
     /* try {
          val testInput = readInput("Day${DAY}_test")
          check(part1(testInput) == 1)

@@ -187,7 +187,7 @@ fun main() {
             } else {
                 val step = m.act(critter)
                 if (step.isBattleOver()) {
-                    return step to (index < critterIds.indices.last)
+                    return step to (index < critterIds.lastIndex)
                 }
                 step to over
             }
