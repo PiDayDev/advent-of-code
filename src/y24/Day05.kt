@@ -42,4 +42,4 @@ private typealias Update = List<Int>
 private fun String.toRule() = split("|").let { (b, a) -> Rule(b.toInt(), a.toInt()) }
 private fun String.toUpdate() = split(",").map { it.toInt() }
 
-private fun <T> List<T>.middle() = elementAt(indices.last / 2)
+private fun <T> List<T>.middle() = elementAt(lastIndex / 2)

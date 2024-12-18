@@ -34,7 +34,7 @@ fun main() {
     }
 
     fun List<String>.stuckLights() = mapIndexed { index, s ->
-        if (index == indices.first || index == indices.last) "#" + s.drop(1).dropLast(1) + "#"
+        if (index == 0 || index == lastIndex) "#" + s.drop(1).dropLast(1) + "#"
         else s
     }
 

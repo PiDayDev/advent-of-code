@@ -13,7 +13,7 @@ fun main() {
     fun List<Int>.division(): Int {
         for (i in indices) {
             val divisor = get(i)
-            for (j in i + 1..indices.last) {
+            for (j in i + 1..lastIndex) {
                 val dividend = get(j)
                 if (dividend % divisor == 0)
                     return dividend / divisor

@@ -16,7 +16,7 @@ fun main() {
 
     fun part2(input: List<String>): String {
         input.forEachIndexed { i, s ->
-            (i + 1..input.indices.last).forEach { j ->
+            (i + 1..input.lastIndex).forEach { j ->
                 val differences = input[j].diff(s)
                 if (differences.size == 1)
                     return s.filterIndexed { k, _ -> k !in differences }

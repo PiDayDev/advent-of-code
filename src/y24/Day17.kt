@@ -65,7 +65,7 @@ fun main() {
 
         val firstOutput = program.first()
         var candidates = map[firstOutput]!!
-        for (n in 1..program.indices.last) {
+        for (n in 1..program.lastIndex) {
             val nthOutput = program[n]
             candidates = mergeLists(candidates, map[nthOutput]!!, n)
         }
@@ -74,7 +74,7 @@ fun main() {
             .min()
     }
 
-    // test if implementation meets criteria from the description, like:
+    // test if implementation meets criteria from the description
     val t1 = part1(
         """
                Register A: 729

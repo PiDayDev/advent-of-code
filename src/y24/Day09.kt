@@ -31,8 +31,8 @@ fun main() {
             mapIndexed { i, v -> i.toLong() * (v ?: 0).toLong() }.sum()
 
         val memory = input.toExpandedMemory()
-        var front = memory.indices.first
-        var back = memory.indices.last
+        var front = 0
+        var back = memory.lastIndex
         while (true) {
             while (memory[front] != null) front++
             while (memory[back] == null) back--

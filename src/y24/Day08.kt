@@ -34,7 +34,7 @@ private class Antennas(
             val emitters = map[k] ?: emptyList()
             val result = mutableSetOf<Position>()
             emitters.indices.forEach { i ->
-                (i + 1..emitters.indices.last).forEach { j ->
+                (i + 1..emitters.lastIndex).forEach { j ->
                     result += allAntinodesFor(emitters[i], emitters[j])
                 }
             }

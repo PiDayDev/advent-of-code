@@ -57,7 +57,7 @@ fun main() {
         return xxl * xl * l
     }
 
-    // test if implementation meets criteria from the description, like:
+    // test if implementation meets criteria from the description
     try {
         val testInput = readInput("Day${day}_test")
         check(part1(testInput) == 15)

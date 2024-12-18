@@ -120,7 +120,7 @@ fun main() {
         return solveCircuit(ops)
     }
 
-    // test if implementation meets criteria from the description, like:
+    // test if implementation meets criteria from the description
     try {
         val testInput = readInput("Day${day}_test")
         val testResult = part1(testInput)
