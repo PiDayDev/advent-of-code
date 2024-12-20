@@ -1,6 +1,7 @@
 package y24
 
 import java.io.File
+import kotlin.math.absoluteValue
 
 /** Reads lines from the given input txt file. */
 fun readInput(name: String) = File("src/y24", "$name.txt").readLines()
@@ -29,6 +30,8 @@ data class Position(val x: Int, val y: Int) {
 
     fun around() =
         listOf(north, south, east, west).map { dir -> this + dir }
+
+    infix fun manhattanDistance(p: Position) = (x - p.x).absoluteValue + (y - p.y).absoluteValue
 
     override fun toString() =
         "($x,$y)"
