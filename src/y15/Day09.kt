@@ -22,8 +22,9 @@ fun main() {
 
     val distances = parse(input)
     val cities = distances.keys.map { it.first }.toSet().toList()
-    val permutationDistances = permutations(cities).map{ list -> list.windowed(2).sumOf { (a, b) -> distances[a to b]!! } }
+    val permutationDistances =
+        permutations(cities).map { list -> list.zipWithNext { a, b -> distances[a to b]!! }.sum() }
 
-    println(permutationDistances.minOf{it})
-    println(permutationDistances.maxOf{it})
+    println(permutationDistances.minOf { it })
+    println(permutationDistances.maxOf { it })
 }

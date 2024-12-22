@@ -86,7 +86,7 @@ private data class Mapper(val section: List<String>) {
             range.first until limits.first().first,
             limits.last().last + 1..range.last,
         )
-        val holes = limits.windowed(2).map { (left, right) ->
+        val holes = limits.zipWithNext { left, right ->
             left.last + 1 until right.first
         }
 

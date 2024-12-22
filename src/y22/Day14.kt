@@ -15,7 +15,7 @@ private data class Poly14(val points: List<Point2D>) {
     val yr: IntRange
         get() = points.map { it.y }.sorted().let { it.first()..it.last() }
 
-    private val allPoints: Set<Point2D> = points.windowed(2).flatMap { (a, b) ->
+    private val allPoints: Set<Point2D> = points.zipWithNext { a, b ->
         val x1 = min(a.x, b.x)
         val x2 = max(a.x, b.x)
         val y1 = min(a.y, b.y)
@@ -25,7 +25,9 @@ private data class Poly14(val points: List<Point2D>) {
                 x to y
             }
         }
-    }.toSet()
+    }
+        .flatten()
+        .toSet()
 
     operator fun contains(p: Point2D) = p in allPoints
 

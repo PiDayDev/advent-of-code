@@ -25,11 +25,8 @@ fun main() {
     println(part2(reports))
 }
 
-private fun List<Int>.isSafe(): Boolean {
-    val pairs = windowed(2) { (a, b) -> a - b }
-    return pairs.all { it in 1..3 } || pairs.all { -it in 1..3 }
-}
-
+private fun List<Int>.isSafe(): Boolean = zipWithNext { a, b -> a - b }
+    .run { all { it in 1..3 } || all { -it in 1..3 } }
 
 private fun List<Int>.canBeMadeSafe(): Boolean =
     indices.any {

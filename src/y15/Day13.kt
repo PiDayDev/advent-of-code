@@ -15,7 +15,9 @@ fun main() {
     }
 
     fun HappyMap.happiness(table: List<String>) =
-        (table + table.first()).windowed(2).sumOf { (a, b) -> getOrDefault(a to b, 0) + getOrDefault(b to a, 0) }
+        (table + table.first())
+            .zipWithNext { a, b -> getOrElse(a to b) { 0 } + getOrElse(b to a) { 0 } }
+            .sum()
 
     fun HappyMap.maxHappiness(
         people: List<String>
