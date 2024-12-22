@@ -6,7 +6,7 @@ fun main() {
     fun extrapolateNext(numbers: List<Long>): Long {
         if (numbers.all { it == 0L }) return 0
 
-        val differences = numbers.windowed(2).map { (a, b) -> b - a }
+        val differences = numbers.zipWithNext { a, b -> b - a }
         return numbers.last() + extrapolateNext(differences)
     }
 

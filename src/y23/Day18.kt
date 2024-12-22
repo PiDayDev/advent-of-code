@@ -1,9 +1,6 @@
 package y23
 
-import y23.Direction.E
-import y23.Direction.N
-import y23.Direction.S
-import y23.Direction.W
+import y23.Direction.*
 import kotlin.math.absoluteValue
 import kotlin.math.sign
 

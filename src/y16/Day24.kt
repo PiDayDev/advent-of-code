@@ -46,7 +46,7 @@ private data class AirDuct(val map: List<String>) {
     }
 
     fun length(path: List<String>) =
-        path.windowed(2).sumOf { (a, b) -> arcs[a]?.get(b) ?: lots }
+        path.zipWithNext { a, b -> arcs[a]?.get(b) ?: lots }.sum()
 }
 
 fun main() {
