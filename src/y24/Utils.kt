@@ -43,11 +43,10 @@ val east = Position(x = 1, y = 0)
 val west = Position(x = -1, y = 0)
 
 fun List<String>.classifyByChar(): Map<Char, List<Position>> {
-    val map = mutableMapOf<Char, MutableList<Position>>()
+    val map = mutableMapOf<Char, List<Position>>()
     forEachIndexed { y, row ->
         row.forEachIndexed { x, c ->
-            val list = map.getOrPut(c) { mutableListOf() }
-            list += Position(x, y)
+            map.merge(c, listOf(Position(x, y))) { a, b -> a + b }
         }
     }
     return map
