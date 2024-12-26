@@ -71,3 +71,9 @@ enum class Direction(val movement: Position) {
 
     fun opposite() = turnRight().turnRight()
 }
+
+fun <T> permutations(list: List<T>): List<List<T>> {
+    if (list.isEmpty()) return emptyList()
+    if (list.size == 1) return listOf(list)
+    return list.flatMap { elem -> permutations(list - elem).map { it + elem } }
+}
