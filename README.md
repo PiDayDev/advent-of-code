@@ -2,7 +2,7 @@
 
 Welcome to the Advent of Code[^aoc] Kotlin project created by [pidaydev][github] using the [Advent of Code Kotlin Template][template] delivered by JetBrains.
 
-In this repository, pidaydev is about to provide solutions for the puzzles using [Kotlin][kotlin] language.
+In this repository, **pidaydev** provides solutions for the puzzles using [Kotlin][kotlin] language.
 
 If you stuck with Kotlin-specific questions or anything related to this template, check out the following resources:
 
@@ -10,6 +10,8 @@ If you stuck with Kotlin-specific questions or anything related to this template
 - [Kotlin Slack][slack]
 - Template [issue tracker][issues]
 
+**Note**: during AoC 2024, I removed all input files from the repository and from commit history, 
+ as required by Advent of Code policies. Previous clones of this repository should be deleted and cloned anew.
 
 [^aoc]:
     [Advent of Code][aoc] – an annual event in December since 2015.
