@@ -28,8 +28,14 @@ data class Position(val x: Int, val y: Int) {
         }.toSet()
     }
 
-    fun around() =
+    fun around4() =
         listOf(north, south, east, west).map { dir -> this + dir }
+
+    fun around8() =
+        listOf(
+            north, south, east, west,
+            north + east, north + west, south + east, south + west,
+        ).map { dir -> this + dir }
 
     infix fun manhattanDistance(p: Position) = (x - p.x).absoluteValue + (y - p.y).absoluteValue
 
